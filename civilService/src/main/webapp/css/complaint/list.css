@@ -1,0 +1,91 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.search-form {
+    background: #f8f9fa;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.search-form form {
+    display: flex;
+    gap: 10px;
+}
+
+.search-form select,
+.search-form input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.search-form input {
+    flex: 1;
+}
+
+.search-form button {
+    padding: 8px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.complaint-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.complaint-table th,
+.complaint-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.complaint-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.complaint-table tbody tr {
+    cursor: pointer;
+}
+
+.complaint-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.status-pending { color: #ffc107; }
+.status-processing { color: #007bff; }
+.status-completed { color: #28a745; }
+.status-rejected { color: #dc3545; }
+
+.file-icon {
+    margin-left: 5px;
+    color: #6c757d;
+}
+
+.button-area {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.create-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.create-btn:hover {
+    background-color: #218838;
+}
