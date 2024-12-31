@@ -4,6 +4,9 @@
 ## 프로젝트 개요
 전자정부 프레임워크의 학습을 위해 전자민원 처리 시스템을 라이브러리와 공용 컴포넌트를 이용해 빠르게 구현하기.
 
+## 프로젝트 진행 기간
+2024.12.31(화) ~ 2025.01.00 (?)
+
 ## 🛠 사용된 기술 스택  
 ![Java](https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white)  
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)  
