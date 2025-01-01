@@ -7,9 +7,9 @@ import org.apache.ibatis.annotations.Param;
 import kr.go.civilservice.security.model.MemberVO;
 
 public interface MemberMapper {
-	MemberVO getMemberById(String memberId);
+	MemberVO getMemberById(@Param("username") String username);
 
-	List<String> getMemberAuthorities(String memberId);
+	List<String> getMemberAuthorities(@Param("username") String username);
 
 	int insertMember(MemberVO member);
 

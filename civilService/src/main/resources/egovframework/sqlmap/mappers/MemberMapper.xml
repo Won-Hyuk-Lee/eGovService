@@ -5,15 +5,23 @@
 
 	<select id="getMemberById"
 		resultType="kr.go.civilservice.security.model.MemberVO">
-		SELECT * FROM MEMBER
-		WHERE MEMBER_ID = #{memberId}
+		SELECT
+		MEMBER_ID as memberId,
+		PASSWORD as password,
+		NAME as
+		name,
+		EMAIL as email,
+		PHONE as phone,
+		ENABLED as enabled
+		FROM MEMBER
+		WHERE
+		MEMBER_ID = #{username}
 	</select>
 
 	<select id="getMemberAuthorities" resultType="string">
-		SELECT
-		AUTHORITY_NAME
+		SELECT AUTHORITY_NAME
 		FROM AUTHORITY
-		WHERE MEMBER_ID = #{memberId}
+		WHERE MEMBER_ID = #{username}
 	</select>
 
 	<insert id="insertMember"
@@ -30,11 +38,8 @@
 	</insert>
 
 	<insert id="insertAuthority">
-		INSERT INTO AUTHORITY (
-		MEMBER_ID, AUTHORITY_NAME
-		) VALUES (
-		#{memberId}, #{authority}
-		)
+		INSERT INTO AUTHORITY (MEMBER_ID, AUTHORITY_NAME)
+		VALUES (#{memberId}, #{authority})
 	</insert>
 
 	<update id="updateMember"
