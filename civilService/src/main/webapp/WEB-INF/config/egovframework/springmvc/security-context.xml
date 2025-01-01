@@ -55,7 +55,7 @@
     
     <!-- 인증 관리자 설정 -->
     <authentication-manager>
-        <authentication-provider user-service-ref="customUserDetailsService">
+        <authentication-provider user-service-ref="customUserDetailService">
             <password-encoder ref="bcryptPasswordEncoder"/>
         </authentication-provider>
     </authentication-manager>
@@ -64,7 +64,4 @@
     <beans:bean id="bcryptPasswordEncoder" 
         class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
         
-    <!-- 사용자 정의 UserDetailsService 빈 -->
-    <beans:bean id="customUserDetailsService" 
-        class="kr.go.civilservice.security.service.CustomUserDetailsService"/>
 </beans:beans>

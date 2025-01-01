@@ -1,58 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.go.civilservice.security.mapper.MemberMapper">
-    
-    <select id="getMemberById" resultType="kr.go.civilservice.security.model.MemberVO">
-        SELECT * FROM MEMBER 
-        WHERE MEMBER_ID = #{memberId}
-    </select>
-    
-    <select id="getMemberAuthorities" resultType="string">
-        SELECT AUTHORITY_NAME 
-        FROM AUTHORITY 
-        WHERE MEMBER_ID = #{memberId}
-    </select>
-    
-    <insert id="insertMember" parameterType="kr.go.civilservice.security.model.MemberVO">
-        INSERT INTO MEMBER (
-            MEMBER_ID, PASSWORD, NAME, EMAIL, PHONE, ADDRESS,
-            ENABLED, CREATED_DATE
-        ) VALUES (
-            #{memberId}, #{password}, #{name}, #{email}, #{phone}, #{address},
-            '1', SYSDATE
-        )
-    </insert>
-    
-    <insert id="insertAuthority">
-        INSERT INTO AUTHORITY (
-            MEMBER_ID, AUTHORITY_NAME
-        ) VALUES (
-            #{memberId}, #{authority}
-        )
-    </insert>
-    
-    <update id="updateMember" parameterType="kr.go.civilservice.security.model.MemberVO">
-        UPDATE MEMBER 
-        SET 
-            NAME = #{name},
-            EMAIL = #{email},
-            PHONE = #{phone},
-            ADDRESS = #{address},
-            MODIFIED_DATE = SYSDATE
-        WHERE MEMBER_ID = #{memberId}
-    </update>
-    
-    <update id="updateLoginFailCount">
-        UPDATE MEMBER 
-        SET LOGIN_FAIL_COUNT = #{count}
-        WHERE MEMBER_ID = #{memberId}
-    </update>
-    
-    <update id="updateLastLoginDate">
-        UPDATE MEMBER 
-        SET 
-            LAST_LOGIN_DATE = SYSDATE,
-            LOGIN_FAIL_COUNT = 0
-        WHERE MEMBER_ID = #{memberId}
-    </update>
+<mapper
+	namespace="kr.go.civilservice.security.mapper.MemberMapper">
+
+	<select id="getMemberById"
+		resultType="kr.go.civilservice.security.model.MemberVO">
+		SELECT * FROM MEMBER
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+
+	<select id="getMemberAuthorities" resultType="string">
+		SELECT
+		AUTHORITY_NAME
+		FROM AUTHORITY
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+
+	<insert id="insertMember"
+		parameterType="kr.go.civilservice.security.model.MemberVO">
+		INSERT INTO MEMBER (
+		MEMBER_ID, PASSWORD, NAME, EMAIL,
+		PHONE, ADDRESS,
+		ENABLED, CREATED_DATE
+		) VALUES (
+		#{memberId},
+		#{password}, #{name}, #{email}, #{phone}, #{address},
+		'1', SYSDATE
+		)
+	</insert>
+
+	<insert id="insertAuthority">
+		INSERT INTO AUTHORITY (
+		MEMBER_ID, AUTHORITY_NAME
+		) VALUES (
+		#{memberId}, #{authority}
+		)
+	</insert>
+
+	<update id="updateMember"
+		parameterType="kr.go.civilservice.security.model.MemberVO">
+		UPDATE MEMBER
+		SET
+		NAME = #{name},
+		EMAIL = #{email},
+		PHONE =
+		#{phone},
+		ADDRESS = #{address},
+		MODIFIED_DATE = SYSDATE
+		WHERE MEMBER_ID =
+		#{memberId}
+	</update>
+
+	<update id="updateLoginFailCount">
+		UPDATE MEMBER
+		SET LOGIN_FAIL_COUNT = #{count}
+		WHERE
+		MEMBER_ID = #{memberId}
+	</update>
+
+	<update id="updateLastLoginDate">
+		UPDATE MEMBER
+		SET
+		LAST_LOGIN_DATE = SYSDATE,
+		LOGIN_FAIL_COUNT = 0
+		WHERE MEMBER_ID = #{memberId}
+	</update>
 </mapper>
