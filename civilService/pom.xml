@@ -10,17 +10,9 @@
 	<name>civilService</name>
 	<url>http://www.egovframe.go.kr</url>
 
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-		</license>
-	</licenses>
-
 	<properties>
 		<spring.maven.artifact.version>4.3.30.RELEASE</spring.maven.artifact.version>
 		<egovframework.rte.version>3.10.0</egovframework.rte.version>
-		<org.springframework.security.version>4.2.20.RELEASE</org.springframework.security.version>
 	</properties>
 
 	<repositories>
@@ -124,13 +116,6 @@
 			<version>2.9.0</version>
 		</dependency>
 
-		<!-- Jackson -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.13.4.2</version>
-		</dependency>
-
 		<!-- MyBatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
@@ -143,21 +128,11 @@
 			<version>2.0.6</version>
 		</dependency>
 
-		<!-- Spring Security -->
+		<!-- Jackson -->
 		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-			<version>4.2.20.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-			<version>4.2.20.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-taglibs</artifactId>
-			<version>4.2.20.RELEASE</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.13.4.2</version>
 		</dependency>
 
 		<!-- Lombok -->
@@ -166,6 +141,13 @@
 			<artifactId>lombok</artifactId>
 			<version>1.18.20</version>
 			<scope>provided</scope>
+		</dependency>
+		
+		<!-- 암호화 -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+			<version>4.2.20.RELEASE</version>
 		</dependency>
 
 		<!-- Commons FileUpload -->
@@ -231,142 +213,7 @@
 						<maxmem>1024m</maxmem>
 					</configuration>
 				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-war-plugin</artifactId>
-					<version>2.4</version>
-					<configuration>
-						<failOnMissingWebXml>false</failOnMissingWebXml>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>hibernate3-maven-plugin</artifactId>
-					<version>3.0</version>
-					<configuration>
-						<components>
-							<component>
-								<name>hbm2ddl</name>
-								<implementation>annotationconfiguration</implementation>
-							</component>
-						</components>
-					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>org.hsqldb</groupId>
-							<artifactId>hsqldb</artifactId>
-							<version>2.5.0</version>
-						</dependency>
-					</dependencies>
-				</plugin>
-				<!-- EMMA -->
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>emma-maven-plugin</artifactId>
-					<version>1.0-alpha-3</version>
-				</plugin>
-				<!-- PMD manven plugin -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-pmd-plugin</artifactId>
-					<version>3.12.0</version>
-				</plugin>
 			</plugins>
 		</pluginManagement>
-		<plugins>
-			<!-- EMMA -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<skipTests>true</skipTests>
-					<forkMode>once</forkMode>
-					<reportFormat>xml</reportFormat>
-					<excludes>
-						<exclude>**/Abstract*.java</exclude>
-						<exclude>**/*Suite.java</exclude>
-					</excludes>
-					<includes>
-						<include>**/*Test.java</include>
-					</includes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>emma-maven-plugin</artifactId>
-				<inherited>true</inherited>
-			</plugin>
-			<!-- JavaDoc -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.1.1</version>
-			</plugin>
-		</plugins>
 	</build>
-	<reporting>
-		<outputDirectory>${basedir}/target/site</outputDirectory>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>3.0.0</version>
-				<reportSets>
-					<reportSet>
-						<id>sunlink</id>
-						<reports>
-							<report>javadoc</report>
-						</reports>
-						<inherited>true</inherited>
-						<configuration>
-							<links>
-								<link>http://docs.oracle.com/javase/6/docs/api/</link>
-							</links>
-						</configuration>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<!-- JUnit Test Results & EMMA Coverage Reporting -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>emma-maven-plugin</artifactId>
-				<inherited>true</inherited>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>surefire-report-maven-plugin</artifactId>
-				<inherited>true</inherited>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>report-only</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<!-- Generating JavaDoc Report -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<minmemory>128m</minmemory>
-					<maxmemory>512m</maxmemory>
-					<encoding>${encoding}</encoding>
-					<docencoding>${encoding}</docencoding>
-					<charset>${encoding}</charset>
-				</configuration>
-			</plugin>
-			<!-- Generating Java Source in HTML -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId>
-				<configuration>
-					<inputEncoding>${encoding}</inputEncoding>
-					<outputEncoding>${encoding}</outputEncoding>
-					<linkJavadoc>true</linkJavadoc>
-					<javadocDir>apidocs</javadocDir>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
 </project>

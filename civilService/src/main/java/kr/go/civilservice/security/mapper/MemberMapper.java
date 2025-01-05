@@ -2,22 +2,32 @@ package kr.go.civilservice.security.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import kr.go.civilservice.security.model.MemberVO;
 
 public interface MemberMapper {
-	MemberVO getMemberById(@Param("username") String username);
+	MemberVO getMemberById(String username);
 
-	List<String> getMemberAuthorities(@Param("username") String username);
+	List<String> getMemberAuthorities(String username);
 
 	int insertMember(MemberVO member);
 
-	int insertAuthority(@Param("memberId") String memberId, @Param("authority") String authority);
+	int insertAuthority(String memberId, String authority);
 
 	int updateMember(MemberVO member);
 
 	int updateLoginFailCount(String memberId, int count);
 
 	int updateLastLoginDate(String memberId);
+
+	int updatePassword(String memberId, String newPassword);
+
+	int getLoginFailCount(String memberId);
+
+	int resetLoginFailCount(String memberId);
+
+	int lockAccount(String memberId);
+
+	int unlockAccount(String memberId);
+
+	List<MemberVO> getAllMembers();
 }

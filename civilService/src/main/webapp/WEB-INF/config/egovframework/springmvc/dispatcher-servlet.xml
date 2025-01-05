@@ -1,43 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
-        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/mvc 
+    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
-	<!-- Component Scan -->
-	<context:component-scan
-		base-package="kr.go.civilservice">
-		<context:include-filter type="annotation"
-			expression="org.springframework.stereotype.Controller" />
-		<context:exclude-filter type="annotation"
-			expression="org.springframework.stereotype.Service" />
-		<context:exclude-filter type="annotation"
-			expression="org.springframework.stereotype.Repository" />
-	</context:component-scan>
+	<!-- Handler Mapping -->
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/">/mainController</prop>
+				<prop key="/complaint/list">complaintController</prop>
+				<prop key="/complaint/create">complaintController</prop>
+				<prop key="/complaint/*">complaintController</prop>
+				<prop key="/admin/dashboard">adminController</prop>
+				<prop key="/access-denied">accessDeniedController</prop>
+			</props>
+		</property>
+	</bean>
 
-	<!-- Annotation 활성화 -->
-	<mvc:annotation-driven>
-		<mvc:message-converters>
-			<bean
-				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-				<property name="supportedMediaTypes">
-					<list>
-						<value>application/json;charset=UTF-8</value>
-					</list>
-				</property>
-			</bean>
-		</mvc:message-converters>
-	</mvc:annotation-driven>
+	<!-- Interceptor -->
+	<bean id="authInterceptor"
+		class="kr.go.civilservice.common.interceptor.AuthInterceptor" />
 
-	<!-- Static Resources 설정 -->
-	<mvc:resources mapping="/css/**" location="/css/" />
-	<mvc:resources mapping="/js/**" location="/js/" />
-	<mvc:resources mapping="/images/**" location="/images/" />
+	<!-- Controllers -->
+	<bean id="mainController"
+		class="kr.go.civilservice.main.controller.MainController" />
+	<bean id="complaintController"
+		class="kr.go.civilservice.complaint.controller.ComplaintController">
+		<property name="complaintService" ref="complaintService" />
+		<property name="uploadPath" value="${file.upload.path}" />
+	</bean>
+	<bean id="adminController"
+		class="kr.go.civilservice.admin.controller.AdminController">
+		<property name="complaintService" ref="complaintService" />
+	</bean>
+	<bean id="accessDeniedController"
+		class="kr.go.civilservice.common.controller.AccessDeniedController" />
 
-	<!-- ViewResolver 설정 -->
+	<!-- ViewResolver -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/" />
@@ -47,19 +51,12 @@
 	<!-- File Upload Resolver -->
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<property name="maxUploadSize" value="10485760" /> <!-- 10MB -->
+		<property name="maxUploadSize" value="10485760" />
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
 
-	<mvc:interceptors>
-		<!-- 공통 인터셉터 -->
-		<mvc:interceptor>
-			<mvc:mapping path="/**" />
-			<mvc:exclude-mapping path="/css/**" />
-			<mvc:exclude-mapping path="/js/**" />
-			<mvc:exclude-mapping path="/images/**" />
-			<bean
-				class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
-		</mvc:interceptor>
-	</mvc:interceptors>
+	<!-- Static Resources -->
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/js/**" location="/js/" />
+	<mvc:resources mapping="/images/**" location="/images/" />
 </beans>

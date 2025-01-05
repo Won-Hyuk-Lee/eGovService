@@ -1,51 +1,59 @@
 package kr.go.civilservice.complaint.controller;
 
-import java.net.URLEncoder;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import kr.go.civilservice.complaint.model.ComplaintFileVO;
-import kr.go.civilservice.complaint.model.ComplaintHistoryVO;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
+
 import kr.go.civilservice.complaint.model.ComplaintVO;
 import kr.go.civilservice.complaint.service.ComplaintService;
-import kr.go.civilservice.security.model.CustomUserDetail;
 
-@Controller
-@RequestMapping("/complaint")
-public class ComplaintController {
+public class ComplaintController extends AbstractController {
 
-	@Autowired
 	private ComplaintService complaintService;
-
-	@Value("${file.upload.path}")
 	private String uploadPath;
 
-	@GetMapping("/list")
-	public String list(@RequestParam(required = false) String searchType,
-			@RequestParam(required = false) String searchKeyword, @RequestParam(required = false) String status,
-			Model model) {
+	public void setComplaintService(ComplaintService complaintService) {
+		this.complaintService = complaintService;
+	}
+
+	public void setUploadPath(String uploadPath) {
+		this.uploadPath = uploadPath;
+	}
+
+	@Override
+	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		String requestURI = request.getRequestURI();
+		ModelAndView mav = new ModelAndView();
+
+		if (requestURI.endsWith("/list")) {
+			handleList(request, mav);
+		} else if (requestURI.endsWith("/create")) {
+			if ("POST".equals(request.getMethod())) {
+				handleCreate(request, mav);
+			} else {
+				mav.setViewName("complaint/create");
+			}
+		} else if (requestURI.matches(".*/\\d+$")) {
+			handleDetail(request, mav);
+		}
+
+		return mav;
+	}
+
+	private void handleList(HttpServletRequest request, ModelAndView mav) {
+		String searchType = request.getParameter("searchType");
+		String searchKeyword = request.getParameter("searchKeyword");
+		String status = request.getParameter("status");
 
 		Map<String, Object> params = new HashMap<>();
 		params.put("searchType", searchType);
@@ -53,83 +61,30 @@ public class ComplaintController {
 		params.put("status", status);
 
 		List<ComplaintVO> complaints = complaintService.getComplaintList(params);
-		model.addAttribute("complaints", complaints);
-
-		return "complaint/list";
+		mav.addObject("complaints", complaints);
+		mav.setViewName("complaint/list");
 	}
 
-	@GetMapping("/create")
-	public String createForm() {
-		return "complaint/create";
-	}
+	private void handleCreate(HttpServletRequest request, ModelAndView mav) throws Exception {
+		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 
-	@PostMapping("/create")
-	public String create(@ModelAttribute ComplaintVO complaint, @RequestParam("files") List<MultipartFile> files,
-			@AuthenticationPrincipal CustomUserDetail userDetail) {
+		ComplaintVO complaint = new ComplaintVO();
+		complaint.setTitle(request.getParameter("title"));
+		complaint.setContent(request.getParameter("content"));
+		complaint.setPrivateInfoYn(request.getParameter("privateInfoYn"));
 
-		complaint.setMemberId(userDetail.getUsername());
+		List<MultipartFile> files = multipartRequest.getFiles("files");
+
 		complaintService.registerComplaint(complaint, files);
-
-		return "redirect:/complaint/list";
+		mav.setViewName("redirect:/complaint/list");
 	}
 
-	@GetMapping("/{complaintId}")
-	public String detail(@PathVariable Long complaintId, Model model) {
+	private void handleDetail(HttpServletRequest request, ModelAndView mav) {
+		String uri = request.getRequestURI();
+		Long complaintId = Long.parseLong(uri.substring(uri.lastIndexOf("/") + 1));
+
 		ComplaintVO complaint = complaintService.getComplaintById(complaintId);
-		List<ComplaintHistoryVO> histories = complaintService.getComplaintHistories(complaintId);
-
-		model.addAttribute("complaint", complaint);
-		model.addAttribute("histories", histories);
-
-		return "complaint/detail";
-	}
-
-	@PostMapping("/{complaintId}/status")
-	@ResponseBody
-	public Map<String, Object> updateStatus(@PathVariable Long complaintId, @RequestParam String status,
-			@RequestParam String comment, @AuthenticationPrincipal CustomUserDetail userDetail) {
-
-		complaintService.updateComplaintStatus(complaintId, status, userDetail.getUsername(), comment);
-
-		Map<String, Object> response = new HashMap<>();
-		response.put("success", true);
-		return response;
-	}
-
-	@GetMapping("/file/{fileId}")
-	public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) throws Exception {
-		ComplaintFileVO fileInfo = complaintService.getComplaintFile(fileId);
-		if (fileInfo == null) {
-			return ResponseEntity.notFound().build();
-		}
-
-		Path filePath = Paths.get(uploadPath).resolve(fileInfo.getStoredFilename());
-		Resource resource = new UrlResource(filePath.toUri());
-
-		if (!resource.exists()) {
-			return ResponseEntity.notFound().build();
-		}
-
-		String encodedFileName = URLEncoder.encode(fileInfo.getOriginalFilename(), "UTF-8").replaceAll("\\+", "%20");
-
-		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"")
-				.header(HttpHeaders.CONTENT_LENGTH, String.valueOf(resource.contentLength()))
-				.header(HttpHeaders.CONTENT_TYPE, "application/octet-stream").body(resource);
-	}
-
-	@DeleteMapping("/{complaintId}")
-	@ResponseBody
-	public ResponseEntity<Map<String, Boolean>> delete(@PathVariable Long complaintId) {
-		try {
-			complaintService.deleteComplaint(complaintId);
-			Map<String, Boolean> response = new HashMap<>(); // 수정된 부분
-			response.put("success", true); // 수정된 부분
-			return ResponseEntity.ok(response);
-		} catch (Exception e) {
-			Map<String, Boolean> response = new HashMap<>(); // 수정된 부분
-			response.put("success", false); // 수정된 부분
-			return ResponseEntity.badRequest().body(response);
-		}
+		mav.addObject("complaint", complaint);
+		mav.setViewName("complaint/detail");
 	}
 }

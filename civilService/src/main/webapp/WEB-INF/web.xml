@@ -6,7 +6,20 @@
     
     <display-name>civilService</display-name>
     
-    <!-- 한글 인코딩 필터 -->
+    <!-- Context Configuration -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath*:egovframework/spring/context-*.xml
+        </param-value>
+    </context-param>
+    
+    <!-- Context Loader Listener -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    
+    <!-- Character Encoding Filter -->
     <filter>
         <filter-name>encodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -14,35 +27,30 @@
             <param-name>encoding</param-name>
             <param-value>UTF-8</param-value>
         </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     
-    <!-- Spring Security Filter -->
+    <!-- XSS Prevention Filter -->
     <filter>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <filter-name>xssFilter</filter-name>
+        <filter-class>kr.go.civilservice.common.filter.XSSFilter</filter-class>
     </filter>
     <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-name>xssFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     
-    <!-- Context Loader Listener -->
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
-    
-    <!-- Context Configuration -->
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>
-            classpath*:egovframework/spring/context-*.xml
-            /WEB-INF/config/egovframework/springmvc/security-context.xml
-        </param-value>
-    </context-param>
+    <!-- Session Configuration -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
     
     <!-- Dispatcher Servlet -->
     <servlet>
@@ -59,10 +67,6 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
     
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
-    
     <!-- Error Pages -->
     <error-page>
         <error-code>404</error-code>
@@ -72,4 +76,12 @@
         <error-code>500</error-code>
         <location>/WEB-INF/jsp/error/500.jsp</location>
     </error-page>
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/WEB-INF/jsp/error/500.jsp</location>
+    </error-page>
+    
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>

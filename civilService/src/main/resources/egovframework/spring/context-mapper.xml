@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
     xsi:schemaLocation="http://www.springframework.org/schema/beans 
-        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-        http://mybatis.org/schema/mybatis-spring 
-        http://mybatis.org/schema/mybatis-spring.xsd">
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
     <!-- SqlSession setup for MyBatis Database Layer -->
     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource" />
-        <property name="configLocation" value="classpath:/egovframework/sqlmap/config/sql-mapper-config.xml" />
-        <property name="mapperLocations" value="classpath:/egovframework/sqlmap/mappers/*.xml" />
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:/egovframework/sqlmap/config/sql-mapper-config.xml"/>
+        <property name="mapperLocations" value="classpath:/egovframework/sqlmap/mappers/*.xml"/>
     </bean>
 
-    <!-- MapperConfigurer setup for MyBatis Database Layer -->
-    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="kr.go.civilservice.**.mapper" />
+    <!-- Complaint Mapper -->
+    <bean id="complaintMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="kr.go.civilservice.complaint.mapper.ComplaintMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSession"/>
+    </bean>
+
+    <!-- Member Mapper -->
+    <bean id="memberMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="kr.go.civilservice.security.mapper.MemberMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSession"/>
     </bean>
 </beans>
