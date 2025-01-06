@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>로그인</title>
-    <link rel="stylesheet" href="<c:url value='/css/security/login.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/member/login.css'/>">
 </head>
 <body>
     <div class="login-container">
@@ -19,9 +19,7 @@
             <div class="error-message">${expired}</div>
         </c:if>
         
-        <form action="<c:url value='/login-proc'/>" method="post">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-            
+        <form action="<c:url value='/member/login'/>" method="post">
             <div class="form-group">
                 <label for="username">아이디</label>
                 <input type="text" id="username" name="username" required>
@@ -36,7 +34,7 @@
         </form>
         
         <div class="links">
-            <a href="<c:url value='/signup'/>">회원가입</a>
+            <a href="<c:url value='/member/signup'/>">회원가입</a>
         </div>
     </div>
 </body>

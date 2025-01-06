@@ -19,7 +19,7 @@
 
     <!-- Member Mapper -->
     <bean id="memberMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="kr.go.civilservice.security.mapper.MemberMapper"/>
+        <property name="mapperInterface" value="kr.go.civilservice.member.mapper.MemberMapper"/>
         <property name="sqlSessionFactory" ref="sqlSession"/>
     </bean>
 </beans>

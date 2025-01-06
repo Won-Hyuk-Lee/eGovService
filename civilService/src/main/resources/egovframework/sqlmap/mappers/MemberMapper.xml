@@ -2,121 +2,115 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper
-	namespace="kr.go.civilservice.security.mapper.MemberMapper">
+<mapper namespace="kr.go.civilservice.member.mapper.MemberMapper">
 
-	<select id="getMemberById"
-		resultType="kr.go.civilservice.security.model.MemberVO">
-		SELECT
-		MEMBER_ID as memberId,
-		PASSWORD as password,
-		NAME as name,
-		EMAIL as email,
-		PHONE as phone,
-		ADDRESS as address,
-		ENABLED as enabled,
-		LOGIN_FAIL_COUNT as loginFailCount,
-		LAST_LOGIN_DATE as lastLoginDate,
-		PASSWORD_CHANGE_DATE as passwordChangeDate,
-		CREATED_DATE as createdDate,
-		MODIFIED_DATE as modifiedDate
-		FROM MEMBER
-		WHERE MEMBER_ID = #{username}
-	</select>
+    <select id="getMemberById" resultType="kr.go.civilservice.member.model.MemberVO">
+        SELECT
+            MEMBER_ID as memberId,
+            PASSWORD as password,
+            NAME as name,
+            EMAIL as email,
+            PHONE as phone,
+            ADDRESS as address,
+            ENABLED as enabled,
+            LOGIN_FAIL_COUNT as loginFailCount,
+            LAST_LOGIN_DATE as lastLoginDate,
+            PASSWORD_CHANGE_DATE as passwordChangeDate,
+            CREATED_DATE as createdDate,
+            MODIFIED_DATE as modifiedDate
+        FROM MEMBER
+        WHERE MEMBER_ID = #{username}
+    </select>
 
-	<select id="getMemberRole" resultType="string">
-		SELECT ROLE
-		FROM MEMBER_ROLE
-		WHERE MEMBER_ID = #{memberId}
-	</select>
+    <select id="getMemberRole" resultType="string">
+        SELECT ROLE
+        FROM MEMBER_ROLE
+        WHERE MEMBER_ID = #{memberId}
+    </select>
 
-	<insert id="insertMember"
-		parameterType="kr.go.civilservice.security.model.MemberVO">
-		INSERT INTO MEMBER (
-		MEMBER_ID, PASSWORD, NAME, EMAIL, PHONE, ADDRESS,
-		ENABLED, CREATED_DATE
-		) VALUES (
-		#{memberId}, #{password}, #{name}, #{email}, #{phone}, #{address},
-		'1', SYSDATE
-		)
-	</insert>
+    <insert id="insertMember" parameterType="kr.go.civilservice.member.model.MemberVO">
+        INSERT INTO MEMBER (
+            MEMBER_ID, PASSWORD, NAME, EMAIL, PHONE, ADDRESS,
+            ENABLED, CREATED_DATE
+        ) VALUES (
+            #{memberId}, #{password}, #{name}, #{email}, #{phone}, #{address},
+            '1', SYSDATE
+        )
+    </insert>
 
-	<insert id="insertMemberRole">
-		INSERT INTO MEMBER_ROLE (MEMBER_ID, ROLE)
-		VALUES (#{memberId}, #{role})
-	</insert>
+    <insert id="insertMemberRole">
+        INSERT INTO MEMBER_ROLE (MEMBER_ID, ROLE)
+        VALUES (#{memberId}, #{role})
+    </insert>
 
-	<update id="updateMember"
-		parameterType="kr.go.civilservice.security.model.MemberVO">
-		UPDATE MEMBER
-		SET
-		NAME = #{name},
-		EMAIL = #{email},
-		PHONE = #{phone},
-		ADDRESS = #{address},
-		MODIFIED_DATE = SYSDATE
-		WHERE MEMBER_ID = #{memberId}
-	</update>
+    <update id="updateMember" parameterType="kr.go.civilservice.member.model.MemberVO">
+        UPDATE MEMBER
+        SET
+            NAME = #{name},
+            EMAIL = #{email},
+            PHONE = #{phone},
+            ADDRESS = #{address},
+            MODIFIED_DATE = SYSDATE
+        WHERE MEMBER_ID = #{memberId}
+    </update>
 
-	<update id="updateLoginFailCount">
-		UPDATE MEMBER
-		SET LOGIN_FAIL_COUNT = #{count}
-		WHERE MEMBER_ID = #{memberId}
-	</update>
+    <update id="updateLoginFailCount">
+        UPDATE MEMBER
+        SET LOGIN_FAIL_COUNT = #{count}
+        WHERE MEMBER_ID = #{memberId}
+    </update>
 
-	<update id="updateLastLoginDate">
-		UPDATE MEMBER
-		SET
-		LAST_LOGIN_DATE = SYSDATE,
-		LOGIN_FAIL_COUNT = 0
-		WHERE MEMBER_ID = #{memberId}
-	</update>
+    <update id="updateLastLoginDate">
+        UPDATE MEMBER
+        SET
+            LAST_LOGIN_DATE = SYSDATE,
+            LOGIN_FAIL_COUNT = 0
+        WHERE MEMBER_ID = #{memberId}
+    </update>
 
-	<select id="getLoginFailCount" resultType="int">
-		SELECT LOGIN_FAIL_COUNT
-		FROM MEMBER
-		WHERE MEMBER_ID = #{memberId}
-	</select>
+    <select id="getLoginFailCount" resultType="int">
+        SELECT LOGIN_FAIL_COUNT
+        FROM MEMBER
+        WHERE MEMBER_ID = #{memberId}
+    </select>
 
-	<update id="resetLoginFailCount">
-		UPDATE MEMBER
-		SET LOGIN_FAIL_COUNT = 0
-		WHERE MEMBER_ID = #{memberId}
-	</update>
+    <update id="resetLoginFailCount">
+        UPDATE MEMBER
+        SET LOGIN_FAIL_COUNT = 0
+        WHERE MEMBER_ID = #{memberId}
+    </update>
 
-	<update id="lockAccount">
-		UPDATE MEMBER
-		SET ENABLED = '0'
-		WHERE MEMBER_ID = #{memberId}
-	</update>
+    <update id="lockAccount">
+        UPDATE MEMBER
+        SET ENABLED = '0'
+        WHERE MEMBER_ID = #{memberId}
+    </update>
 
-	<update id="unlockAccount">
-		UPDATE MEMBER
-		SET ENABLED = '1',
-		LOGIN_FAIL_COUNT = 0
-		WHERE MEMBER_ID = #{memberId}
-	</update>
+    <update id="unlockAccount">
+        UPDATE MEMBER
+        SET ENABLED = '1',
+        LOGIN_FAIL_COUNT = 0
+        WHERE MEMBER_ID = #{memberId}
+    </update>
 
-	<update id="updatePassword">
-		UPDATE MEMBER
-		SET PASSWORD = #{newPassword},
-		PASSWORD_CHANGE_DATE = SYSDATE,
-		MODIFIED_DATE = SYSDATE
-		WHERE MEMBER_ID = #{memberId}
-	</update>
+    <update id="updatePassword">
+        UPDATE MEMBER
+        SET PASSWORD = #{newPassword},
+        PASSWORD_CHANGE_DATE = SYSDATE,
+        MODIFIED_DATE = SYSDATE
+        WHERE MEMBER_ID = #{memberId}
+    </update>
 
-	<select id="getAllMembers"
-		resultType="kr.go.civilservice.security.model.MemberVO">
-		SELECT
-		MEMBER_ID as memberId,
-		NAME as name,
-		EMAIL as email,
-		PHONE as phone,
-		ENABLED as enabled,
-		LOGIN_FAIL_COUNT as loginFailCount,
-		LAST_LOGIN_DATE as lastLoginDate
-		FROM MEMBER
-		ORDER BY MEMBER_ID
-	</select>
-
+    <select id="getAllMembers" resultType="kr.go.civilservice.member.model.MemberVO">
+        SELECT
+            MEMBER_ID as memberId,
+            NAME as name,
+            EMAIL as email,
+            PHONE as phone,
+            ENABLED as enabled,
+            LOGIN_FAIL_COUNT as loginFailCount,
+            LAST_LOGIN_DATE as lastLoginDate
+        FROM MEMBER
+        ORDER BY MEMBER_ID
+    </select>
 </mapper>

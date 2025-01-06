@@ -1,8 +1,8 @@
-package kr.go.civilservice.security.mapper;
+package kr.go.civilservice.member.mapper;
 
 import java.util.List;
 
-import kr.go.civilservice.security.model.MemberVO;
+import kr.go.civilservice.member.model.MemberVO;
 
 public interface MemberMapper {
 	MemberVO getMemberById(String username);

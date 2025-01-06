@@ -12,32 +12,49 @@
 		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<props>
-				<prop key="/">/mainController</prop>
+				<prop key="/">mainController</prop>
 				<prop key="/complaint/list">complaintController</prop>
 				<prop key="/complaint/create">complaintController</prop>
-				<prop key="/complaint/*">complaintController</prop>
+				<prop key="/complaint/view/*">complaintController</prop>
+				<prop key="/complaint/delete/*">complaintController</prop>
 				<prop key="/admin/dashboard">adminController</prop>
+				<prop key="/member/login">loginController</prop>
+				<prop key="/member/logout">logoutController</prop>
+				<prop key="/member/signup">memberController</prop>
+				<prop key="/member/check-id">memberController</prop>
 				<prop key="/access-denied">accessDeniedController</prop>
 			</props>
 		</property>
 	</bean>
 
-	<!-- Interceptor -->
-	<bean id="authInterceptor"
-		class="kr.go.civilservice.common.interceptor.AuthInterceptor" />
-
 	<!-- Controllers -->
 	<bean id="mainController"
 		class="kr.go.civilservice.main.controller.MainController" />
-	<bean id="complaintController"
-		class="kr.go.civilservice.complaint.controller.ComplaintController">
-		<property name="complaintService" ref="complaintService" />
-		<property name="uploadPath" value="${file.upload.path}" />
-	</bean>
+
 	<bean id="adminController"
 		class="kr.go.civilservice.admin.controller.AdminController">
 		<property name="complaintService" ref="complaintService" />
 	</bean>
+
+	<!-- complaintController 추가 -->
+	<bean id="complaintController"
+		class="kr.go.civilservice.complaint.controller.ComplaintController">
+		<property name="complaintService" ref="complaintService" />
+	</bean>
+
+	<bean id="loginController"
+		class="kr.go.civilservice.member.controller.LoginController">
+		<property name="memberService" ref="memberService" />
+	</bean>
+
+	<bean id="logoutController"
+		class="kr.go.civilservice.member.controller.LogoutController" />
+
+	<bean id="memberController"
+		class="kr.go.civilservice.member.controller.MemberController">
+		<property name="memberService" ref="memberService" />
+	</bean>
+
 	<bean id="accessDeniedController"
 		class="kr.go.civilservice.common.controller.AccessDeniedController" />
 

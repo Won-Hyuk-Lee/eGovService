@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!DOCTYPE html>
 <html>
@@ -70,11 +69,11 @@
             </table>
             
             <!-- 민원 등록 버튼 -->
-            <sec:authorize access="hasRole('ROLE_USER')">
+            <c:if test="${not empty sessionScope.member}">
                 <div class="button-area">
                     <a href="<c:url value='/complaint/create'/>" class="create-btn">민원 등록</a>
                 </div>
-            </sec:authorize>
+            </c:if>
         </div>
     </main>
     

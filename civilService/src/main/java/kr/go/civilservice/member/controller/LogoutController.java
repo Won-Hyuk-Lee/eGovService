@@ -1,4 +1,4 @@
-package kr.go.civilservice.login.controller;
+package kr.go.civilservice.member.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

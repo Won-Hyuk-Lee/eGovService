@@ -1,4 +1,3 @@
-// PasswordController.java
 package kr.go.civilservice.member.controller;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,8 +7,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
-import kr.go.civilservice.security.model.MemberVO;
-import kr.go.civilservice.security.service.MemberService;
+import kr.go.civilservice.member.model.MemberVO;
+import kr.go.civilservice.member.service.MemberService;
 
 public class PasswordController extends AbstractController {
 

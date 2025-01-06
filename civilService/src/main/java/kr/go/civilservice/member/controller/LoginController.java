@@ -1,5 +1,4 @@
-package kr.go.civilservice.login.controller;
-
+package kr.go.civilservice.member.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -7,8 +6,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
-import kr.go.civilservice.security.model.MemberVO;
-import kr.go.civilservice.security.service.MemberService;
+import kr.go.civilservice.member.model.MemberVO;
+import kr.go.civilservice.member.service.MemberService;
 
 public class LoginController extends AbstractController {
 
@@ -37,7 +36,7 @@ public class LoginController extends AbstractController {
 				mav.addObject("expired", "세션이 만료되었습니다. 다시 로그인해주세요.");
 			}
 
-			mav.setViewName("security/login");
+			mav.setViewName("member/login");
 			return mav;
 		}
 
@@ -49,7 +48,7 @@ public class LoginController extends AbstractController {
 			// 계정 잠금 여부 확인
 			if (memberService.isAccountLocked(memberId)) {
 				mav.addObject("error", "계정이 잠금되었습니다. 관리자에게 문의하세요.");
-				mav.setViewName("security/login");
+				mav.setViewName("member/login");
 				return mav;
 			}
 
@@ -79,12 +78,12 @@ public class LoginController extends AbstractController {
 				}
 
 				mav.addObject("error", errorMessage);
-				mav.setViewName("security/login");
+				mav.setViewName("member/login");
 			}
 
 		} catch (Exception e) {
 			mav.addObject("error", "로그인 처리 중 오류가 발생했습니다.");
-			mav.setViewName("security/login");
+			mav.setViewName("member/login");
 		}
 
 		return mav;

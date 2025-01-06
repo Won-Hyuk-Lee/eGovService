@@ -1,11 +1,11 @@
-package kr.go.civilservice.security.service;
+package kr.go.civilservice.member.service;
 
 import java.util.List;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import kr.go.civilservice.security.mapper.MemberMapper;
-import kr.go.civilservice.security.model.MemberVO;
+import kr.go.civilservice.member.mapper.MemberMapper;
+import kr.go.civilservice.member.model.MemberVO;
 
 public class MemberServiceImpl implements MemberService {
 

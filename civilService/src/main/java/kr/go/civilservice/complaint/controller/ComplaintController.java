@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -14,18 +15,14 @@ import org.springframework.web.servlet.mvc.AbstractController;
 
 import kr.go.civilservice.complaint.model.ComplaintVO;
 import kr.go.civilservice.complaint.service.ComplaintService;
+import kr.go.civilservice.member.model.MemberVO;
 
 public class ComplaintController extends AbstractController {
 
 	private ComplaintService complaintService;
-	private String uploadPath;
-
+	
 	public void setComplaintService(ComplaintService complaintService) {
 		this.complaintService = complaintService;
-	}
-
-	public void setUploadPath(String uploadPath) {
-		this.uploadPath = uploadPath;
 	}
 
 	@Override
@@ -43,8 +40,10 @@ public class ComplaintController extends AbstractController {
 			} else {
 				mav.setViewName("complaint/create");
 			}
-		} else if (requestURI.matches(".*/\\d+$")) {
+		} else if (requestURI.matches(".*/view/\\d+$")) {
 			handleDetail(request, mav);
+		} else if (requestURI.matches(".*/delete/\\d+$")) {
+			handleDelete(request, mav);
 		}
 
 		return mav;
@@ -68,10 +67,14 @@ public class ComplaintController extends AbstractController {
 	private void handleCreate(HttpServletRequest request, ModelAndView mav) throws Exception {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 
+		HttpSession session = request.getSession();
+		MemberVO member = (MemberVO) session.getAttribute("member");
+
 		ComplaintVO complaint = new ComplaintVO();
 		complaint.setTitle(request.getParameter("title"));
 		complaint.setContent(request.getParameter("content"));
 		complaint.setPrivateInfoYn(request.getParameter("privateInfoYn"));
+		complaint.setMemberId(member.getMemberId());
 
 		List<MultipartFile> files = multipartRequest.getFiles("files");
 
@@ -86,5 +89,29 @@ public class ComplaintController extends AbstractController {
 		ComplaintVO complaint = complaintService.getComplaintById(complaintId);
 		mav.addObject("complaint", complaint);
 		mav.setViewName("complaint/detail");
+	}
+
+	private void handleDelete(HttpServletRequest request, ModelAndView mav) {
+		String uri = request.getRequestURI();
+		Long complaintId = Long.parseLong(uri.substring(uri.lastIndexOf("/") + 1));
+
+		try {
+			HttpSession session = request.getSession();
+			MemberVO member = (MemberVO) session.getAttribute("member");
+			String memberRole = (String) session.getAttribute("memberRole");
+
+			ComplaintVO complaint = complaintService.getComplaintById(complaintId);
+
+			if (complaint != null
+					&& (complaint.getMemberId().equals(member.getMemberId()) || "ADMIN".equals(memberRole))) {
+				complaintService.deleteComplaint(complaintId);
+				mav.setViewName("redirect:/complaint/list");
+			} else {
+				mav.setViewName("redirect:/access-denied");
+			}
+		} catch (Exception e) {
+			mav.addObject("error", "민원 삭제 중 오류가 발생했습니다.");
+			mav.setViewName("error/500");
+		}
 	}
 }

@@ -16,8 +16,6 @@
             <h2>민원 등록</h2>
             
             <form action="<c:url value='/complaint/create'/>" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                
                 <div class="form-group">
                     <label for="title">제목</label>
                     <input type="text" id="title" name="title" required>

@@ -1,8 +1,8 @@
-package kr.go.civilservice.security.service;
+package kr.go.civilservice.member.service;
 
 import java.util.List;
 
-import kr.go.civilservice.security.model.MemberVO;
+import kr.go.civilservice.member.model.MemberVO;
 
 public interface MemberService {
 	void registerMember(MemberVO memberVO);
