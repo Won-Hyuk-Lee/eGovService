@@ -89,7 +89,7 @@
         
         if (comment === null) return;
 
-        fetch('<c:url value="/complaint/${complaint.complaintId}/status"/>', {
+        fetch('<c:url value="/complaint/status/${complaint.complaintId}"/>', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -112,21 +112,13 @@
         });
     }
 
-    function deleteComplaint() {
+    function deleteComplaint() {function deleteComplaint() {
         if (confirm('정말 삭제하시겠습니까?')) {
-            fetch('<c:url value="/complaint/${complaint.complaintId}"/>', {
-                method: 'DELETE'
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('삭제되었습니다.');
-                    location.href = '<c:url value="/complaint/list"/>';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('삭제에 실패했습니다.');
-            });
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '<c:url value="/complaint/delete/${complaint.complaintId}"/>';
+            document.body.appendChild(form);
+            form.submit();
         }
     }
     </script>
