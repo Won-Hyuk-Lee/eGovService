@@ -1,4 +1,4 @@
-package kr.go.civilservice.security.model;
+package kr.go.civilservice.member.model;
 
 import java.util.Date;
 

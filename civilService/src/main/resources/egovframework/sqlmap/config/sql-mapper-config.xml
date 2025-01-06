@@ -3,6 +3,9 @@
 
 <configuration>
     <typeAliases>
-        <typeAlias alias="memberVO" type="kr.go.civilservice.security.model.MemberVO"/>
+        <typeAlias alias="memberVO" type="kr.go.civilservice.member.model.MemberVO"/>
+        <typeAlias alias="complaintVO" type="kr.go.civilservice.complaint.model.ComplaintVO"/>
+        <typeAlias alias="complaintFileVO" type="kr.go.civilservice.complaint.model.ComplaintFileVO"/>
+        <typeAlias alias="complaintHistoryVO" type="kr.go.civilservice.complaint.model.ComplaintHistoryVO"/>
     </typeAliases>
 </configuration>

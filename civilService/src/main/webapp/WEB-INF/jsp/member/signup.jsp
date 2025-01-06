@@ -1,82 +1,64 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>회원가입</title>
-<link rel="stylesheet" href="<c:url value='/css/security/signup.css'/>">
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <link rel="stylesheet" href="<c:url value='/css/member/signup.css'/>">
 </head>
 <body>
-	<div class="signup-container">
-		<h2>회원가입</h2>
+    <div class="signup-container">
+        <h2>회원가입</h2>
 
-		<form action="<c:url value='/signup'/>" method="post"
-			onsubmit="return validateForm()">
-			<input type="hidden" name="${_csrf.parameterName}"
-				value="${_csrf.token}" />
+        <form action="<c:url value='/member/signup'/>" method="post" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="memberId">아이디</label>
+                <div class="input-group">
+                    <input type="text" id="memberId" name="memberId" required>
+                    <button type="button" onclick="checkId()" class="check-btn">중복확인</button>
+                </div>
+            </div>
 
-			<div class="form-group">
-				<label for="memberId">아이디</label>
-				<div class="input-group">
-					<input type="text" id="memberId" name="memberId" required>
-					<button type="button" onclick="checkId()" class="check-btn">중복확인</button>
-				</div>
-			</div>
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" name="password" required>
+            </div>
 
-			<div class="form-group">
-				<label for="password">비밀번호</label> <input type="password"
-					id="password" name="password" required>
-			</div>
+            <div class="form-group">
+                <label for="passwordConfirm">비밀번호 확인</label>
+                <input type="password" id="passwordConfirm" required>
+            </div>
 
-			<div class="form-group">
-				<label for="passwordConfirm">비밀번호 확인</label> <input type="password"
-					id="passwordConfirm" required>
-			</div>
+            <div class="form-group">
+                <label for="name">이름</label>
+                <input type="text" id="name" name="name" required>
+            </div>
 
-			<div class="form-group">
-				<label for="name">이름</label> <input type="text" id="name"
-					name="name" required>
-			</div>
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email" required>
+            </div>
 
-			<div class="form-group">
-				<label for="email">이메일</label> <input type="email" id="email"
-					name="email" required>
-			</div>
+            <div class="form-group">
+                <label for="phone">전화번호</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
 
-			<div class="form-group">
-				<label for="phone">전화번호</label> <input type="tel" id="phone"
-					name="phone" required>
-			</div>
+            <div class="form-group">
+                <label for="address">주소</label>
+                <input type="text" id="address" name="address">
+            </div>
 
-			<div class="form-group">
-				<label for="address">주소</label> <input type="text" id="address"
-					name="address">
-			</div>
+            <button type="submit" class="signup-btn">가입하기</button>
+        </form>
 
-			<button type="submit" class="signup-btn">가입하기</button>
-		</form>
+        <div class="links">
+            <a href="<c:url value='/member/login'/>">로그인으로 돌아가기</a>
+        </div>
+    </div>
 
-		<div class="links">
-			<a href="<c:url value='/login'/>">로그인으로 돌아가기</a>
-		</div>
-	</div>
-
-	<script>
-    function validateForm() {
-        var password = document.getElementById('password').value;
-        var passwordConfirm = document.getElementById('passwordConfirm').value;
-        
-        if (password !== passwordConfirm) {
-            alert('비밀번호가 일치하지 않습니다.');
-            return false;
-        }
-        return true;
-    }
-    </script>
-
-	<script>
+    <script>
 // 비밀번호 정규식 (8~16자, 영문/숫자/특수문자 조합)
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/;
 
@@ -90,7 +72,7 @@ function checkId() {
         return;
     }
     
-    fetch('/checkId?memberId=' + memberId)
+    fetch('<c:url value="/member/check-id?memberId="/>' + memberId)
         .then(response => response.json())
         .then(data => {
             if (data.duplicate) {
@@ -163,7 +145,6 @@ function validateForm() {
 document.getElementById('memberId').addEventListener('input', function() {
     isIdChecked = false;
 });
-</script>
-
+    </script>
 </body>
 </html>

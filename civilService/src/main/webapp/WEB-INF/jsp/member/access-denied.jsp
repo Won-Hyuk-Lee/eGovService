@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>접근 거부</title>
-    <link rel="stylesheet" href="<c:url value='/css/security/access-denied.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/member/access-denied.css'/>">
 </head>
 <body>
     <div class="access-denied-container">
