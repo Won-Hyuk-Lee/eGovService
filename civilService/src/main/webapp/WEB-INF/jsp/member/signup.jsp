@@ -72,7 +72,7 @@ function checkId() {
         return;
     }
     
-    fetch('/member/check-id?memberId=' + memberId)
+    fetch('<c:url value="/member/check-id?memberId="/>' + memberId)
         .then(response => response.json())
         .then(data => {
             if (data.duplicate) {

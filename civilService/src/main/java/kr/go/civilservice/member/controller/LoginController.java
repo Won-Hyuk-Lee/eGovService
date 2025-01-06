@@ -1,4 +1,5 @@
 package kr.go.civilservice.member.controller;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -45,6 +46,10 @@ public class LoginController extends AbstractController {
 		String password = request.getParameter("password");
 
 		try {
+			if (memberService == null) {
+				throw new IllegalStateException("memberService가 주입되지 않았습니다.");
+			}
+
 			// 계정 잠금 여부 확인
 			if (memberService.isAccountLocked(memberId)) {
 				mav.addObject("error", "계정이 잠금되었습니다. 관리자에게 문의하세요.");
@@ -64,8 +69,8 @@ public class LoginController extends AbstractController {
 				// 로그인 실패 횟수 초기화
 				memberService.resetLoginFailCount(memberId);
 
-				mav.setViewName("redirect:/");
-
+				response.sendRedirect(request.getContextPath() + "/");
+				return null;
 			} else {
 				// 로그인 실패
 				int failCount = memberService.increaseLoginFailCount(memberId);
@@ -82,6 +87,7 @@ public class LoginController extends AbstractController {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			mav.addObject("error", "로그인 처리 중 오류가 발생했습니다.");
 			mav.setViewName("member/login");
 		}

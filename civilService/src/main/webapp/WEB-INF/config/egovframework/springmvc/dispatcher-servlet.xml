@@ -61,9 +61,19 @@
 	<!-- ViewResolver -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="order" value="2"/>
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
+	
+	 <!-- JSON View Resolver 추가 -->
+    <bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+        <property name="contentType" value="application/json;charset=UTF-8"/>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+        <property name="order" value="1"/>
+    </bean>
 
 	<!-- File Upload Resolver -->
 	<bean id="multipartResolver"

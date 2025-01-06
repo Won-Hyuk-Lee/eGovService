@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
     http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
-	<!-- Service -->
-	<bean id="complaintService"
-		class="kr.go.civilservice.complaint.service.ComplaintServiceImpl">
-		<property name="complaintMapper" ref="complaintMapper" />
-		<property name="uploadPath" value="${file.upload.path}" />
-	</bean>
+    <!-- Password Encoder -->
+    <bean id="passwordEncoder" 
+        class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
-	<bean id="memberService"
-		class="kr.go.civilservice.member.service.MemberServiceImpl">
-		<property name="memberMapper" ref="memberMapper" />
-	</bean>
+    <!-- Service Beans -->
+    <bean id="complaintService"
+        class="kr.go.civilservice.complaint.service.ComplaintServiceImpl">
+        <property name="complaintMapper" ref="complaintMapper" />
+        <property name="uploadPath" value="${file.upload.path}" />
+    </bean>
+
+    <bean id="memberService"
+        class="kr.go.civilservice.member.service.MemberServiceImpl">
+        <property name="memberMapper" ref="memberMapper" />
+        <property name="passwordEncoder" ref="passwordEncoder" />
+    </bean>
 
 </beans>
