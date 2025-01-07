@@ -1,6 +1,8 @@
 package kr.go.civilservice.member.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -109,4 +111,23 @@ public class MemberServiceImpl implements MemberService {
 	public List<MemberVO> getAllMembers() {
 		return memberMapper.getAllMembers();
 	}
+
+	@Override
+	public List<MemberVO> getMemberList(int page, int pageSize) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("start", (page - 1) * pageSize);
+		params.put("size", pageSize);
+		return memberMapper.selectMemberList(params);
+	}
+
+	@Override
+	public int getTotalMemberCount() {
+		return memberMapper.getTotalMemberCount();
+	}
+
+	@Override
+	public MemberVO getMemberById(String memberId) {
+		return memberMapper.getMemberById(memberId);
+	}
+
 }

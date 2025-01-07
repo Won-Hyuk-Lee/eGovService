@@ -26,4 +26,10 @@ public interface MemberService {
 	void changePassword(String memberId, String currentPassword, String newPassword);
 
 	List<MemberVO> getAllMembers();
+
+	List<MemberVO> getMemberList(int page, int pageSize);
+
+	int getTotalMemberCount();
+
+	MemberVO getMemberById(String memberId);
 }

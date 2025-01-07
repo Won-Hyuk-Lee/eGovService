@@ -2,110 +2,146 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.go.civilservice.member.mapper.MemberMapper">
-   <!-- 회원 정보 조회 -->
-   <select id="getMemberById" resultType="kr.go.civilservice.member.model.MemberVO">
-       SELECT
-           MEMBER_ID as memberId,
-           PASSWORD as password,
-           NAME as name,
-           EMAIL as email,
-           PHONE as phone,
-           ADDRESS as address,
-           ENABLED as enabled,
-           LOGIN_FAIL_COUNT as loginFailCount,
-           LAST_LOGIN_DATE as lastLoginDate,
-           PASSWORD_CHANGE_DATE as passwordChangeDate,
-           CREATED_DATE as createdDate,
-           MODIFIED_DATE as modifiedDate
-       FROM MEMBER
-       WHERE MEMBER_ID = #{username}
-   </select>
+	<!-- 회원 정보 조회 -->
+	<select id="getMemberById"
+		resultType="kr.go.civilservice.member.model.MemberVO">
+		SELECT
+		MEMBER_ID as memberId,
+		PASSWORD as password,
+		NAME as name,
+		EMAIL as email,
+		PHONE as phone,
+		ADDRESS as address,
+		ENABLED as enabled,
+		LOGIN_FAIL_COUNT as loginFailCount,
+		LAST_LOGIN_DATE as lastLoginDate,
+		PASSWORD_CHANGE_DATE as passwordChangeDate,
+		CREATED_DATE as createdDate,
+		MODIFIED_DATE as modifiedDate
+		FROM MEMBER
+		WHERE MEMBER_ID = #{username}
+	</select>
 
-   <!-- 회원 권한 조회 -->
-   <select id="getMemberAuthorities" resultType="string">
-       SELECT ROLE
-       FROM MEMBER_ROLE
-       WHERE MEMBER_ID = #{memberId}
-   </select>
+	<!-- 회원 권한 조회 -->
+	<select id="getMemberAuthorities" resultType="string">
+		SELECT ROLE
+		FROM
+		MEMBER_ROLE
+		WHERE MEMBER_ID = #{memberId}
+	</select>
 
-   <!-- 회원 등록 -->
-   <insert id="insertMember" parameterType="kr.go.civilservice.member.model.MemberVO">
-       INSERT INTO MEMBER (
-           MEMBER_ID, PASSWORD, NAME, EMAIL, PHONE, ADDRESS,
-           ENABLED, CREATED_DATE
-       ) VALUES (
-           #{memberId}, #{password}, #{name}, #{email}, #{phone}, #{address},
-           '1', SYSDATE
-       )
-   </insert>
+	<!-- 회원 등록 -->
+	<insert id="insertMember"
+		parameterType="kr.go.civilservice.member.model.MemberVO">
+		INSERT INTO MEMBER (
+		MEMBER_ID, PASSWORD, NAME, EMAIL,
+		PHONE, ADDRESS,
+		ENABLED, CREATED_DATE
+		) VALUES (
+		#{memberId},
+		#{password}, #{name}, #{email}, #{phone}, #{address},
+		'1', SYSDATE
+		)
+	</insert>
 
-   <!-- 회원 권한 등록 -->
-   <insert id="insertAuthority">
-       INSERT INTO MEMBER_ROLE (MEMBER_ID, ROLE)
-       VALUES (#{param1}, #{param2})
-   </insert>
+	<!-- 회원 권한 등록 -->
+	<insert id="insertAuthority">
+		INSERT INTO MEMBER_ROLE (MEMBER_ID, ROLE)
+		VALUES
+		(#{param1}, #{param2})
+	</insert>
 
-   <!-- 로그인 실패 카운트 관련 -->
-   <update id="updateLoginFailCount">
-       UPDATE MEMBER
-       SET LOGIN_FAIL_COUNT = #{count}
-       WHERE MEMBER_ID = #{memberId}
-   </update>
+	<!-- 로그인 실패 카운트 관련 -->
+	<update id="updateLoginFailCount">
+		UPDATE MEMBER
+		SET LOGIN_FAIL_COUNT = #{count}
+		WHERE
+		MEMBER_ID = #{memberId}
+	</update>
 
-   <update id="updateLastLoginDate">
-       UPDATE MEMBER
-       SET
-           LAST_LOGIN_DATE = SYSDATE,
-           LOGIN_FAIL_COUNT = 0
-       WHERE MEMBER_ID = #{memberId}
-   </update>
+	<update id="updateLastLoginDate">
+		UPDATE MEMBER
+		SET
+		LAST_LOGIN_DATE = SYSDATE,
+		LOGIN_FAIL_COUNT = 0
+		WHERE MEMBER_ID = #{memberId}
+	</update>
 
-   <select id="getLoginFailCount" resultType="int">
-       SELECT LOGIN_FAIL_COUNT
-       FROM MEMBER
-       WHERE MEMBER_ID = #{memberId}
-   </select>
+	<select id="getLoginFailCount" resultType="int">
+		SELECT
+		LOGIN_FAIL_COUNT
+		FROM MEMBER
+		WHERE MEMBER_ID = #{memberId}
+	</select>
 
-   <update id="resetLoginFailCount">
-       UPDATE MEMBER
-       SET LOGIN_FAIL_COUNT = 0
-       WHERE MEMBER_ID = #{memberId}
-   </update>
+	<update id="resetLoginFailCount">
+		UPDATE MEMBER
+		SET LOGIN_FAIL_COUNT = 0
+		WHERE MEMBER_ID
+		= #{memberId}
+	</update>
 
-   <!-- 계정 잠금 관련 -->
-   <update id="lockAccount">
-       UPDATE MEMBER
-       SET ENABLED = '0'
-       WHERE MEMBER_ID = #{memberId}
-   </update>
+	<!-- 계정 잠금 관련 -->
+	<update id="lockAccount">
+		UPDATE MEMBER
+		SET ENABLED = '0'
+		WHERE MEMBER_ID =
+		#{memberId}
+	</update>
 
-   <update id="unlockAccount">
-       UPDATE MEMBER
-       SET ENABLED = '1',
-       LOGIN_FAIL_COUNT = 0
-       WHERE MEMBER_ID = #{memberId}
-   </update>
+	<update id="unlockAccount">
+		UPDATE MEMBER
+		SET ENABLED = '1',
+		LOGIN_FAIL_COUNT = 0
+		WHERE MEMBER_ID = #{memberId}
+	</update>
 
-   <!-- 비밀번호 변경 -->
-   <update id="updatePassword">
-       UPDATE MEMBER
-       SET PASSWORD = #{newPassword},
-       PASSWORD_CHANGE_DATE = SYSDATE,
-       MODIFIED_DATE = SYSDATE
-       WHERE MEMBER_ID = #{memberId}
-   </update>
+	<!-- 비밀번호 변경 -->
+	<update id="updatePassword">
+		UPDATE MEMBER
+		SET PASSWORD = #{newPassword},
+		PASSWORD_CHANGE_DATE = SYSDATE,
+		MODIFIED_DATE = SYSDATE
+		WHERE MEMBER_ID
+		= #{memberId}
+	</update>
 
-   <!-- 전체 회원 목록 조회 -->
-   <select id="getAllMembers" resultType="kr.go.civilservice.member.model.MemberVO">
-       SELECT
-           MEMBER_ID as memberId,
-           NAME as name,
-           EMAIL as email,
-           PHONE as phone,
-           ENABLED as enabled,
-           LOGIN_FAIL_COUNT as loginFailCount,
-           LAST_LOGIN_DATE as lastLoginDate
-       FROM MEMBER
-       ORDER BY MEMBER_ID
-   </select>
+	<!-- 전체 회원 목록 조회 -->
+	<select id="getAllMembers"
+		resultType="kr.go.civilservice.member.model.MemberVO">
+		SELECT
+		MEMBER_ID as memberId,
+		NAME as name,
+		EMAIL as email,
+		PHONE as phone,
+		ENABLED as enabled,
+		LOGIN_FAIL_COUNT as loginFailCount,
+		LAST_LOGIN_DATE as lastLoginDate
+		FROM MEMBER
+		ORDER BY MEMBER_ID
+	</select>
+
+<select id="selectMemberList" parameterType="map" resultType="memberVO">
+    <![CDATA[
+    SELECT * FROM (
+        SELECT a.*, ROWNUM rnum FROM (
+            SELECT
+            MEMBER_ID as memberId,
+            NAME as name,
+            EMAIL as email,
+            ENABLED as enabled,
+            LAST_LOGIN_DATE as lastLoginDate
+            FROM MEMBER
+            ORDER BY MEMBER_ID
+        ) a WHERE
+        ROWNUM <= #{start} + #{size}
+    ) WHERE rnum > #{start}
+    ]]>
+</select>
+
+	<select id="getTotalMemberCount" resultType="int">
+		SELECT COUNT(*) FROM
+		MEMBER
+	</select>
+
 </mapper>

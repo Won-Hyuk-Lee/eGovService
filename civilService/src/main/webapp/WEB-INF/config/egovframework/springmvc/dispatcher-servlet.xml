@@ -19,7 +19,10 @@
 				<prop key="/complaint/delete/*">complaintController</prop>
 				<prop key="/complaint/edit/*">complaintController</prop>
 				<prop key="/complaint/status/*">complaintController</prop>
-				<prop key="/admin/dashboard">adminController</prop>
+				<prop key="/admin">adminController</prop>
+				<prop key="/admin/members">adminController</prop>
+				<prop key="/admin/complaints">adminController</prop>
+				<prop key="/admin/member/*">adminController</prop>
 				<prop key="/member/login">loginController</prop>
 				<prop key="/member/logout">logoutController</prop>
 				<prop key="/member/signup">memberController</prop>
@@ -36,6 +39,7 @@
 	<bean id="adminController"
 		class="kr.go.civilservice.admin.controller.AdminController">
 		<property name="complaintService" ref="complaintService" />
+		<property name="memberService" ref="memberService" />
 	</bean>
 
 	<bean id="complaintController"
@@ -62,19 +66,22 @@
 	<!-- ViewResolver -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="order" value="2"/>
+		<property name="order" value="2" />
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
-	
-	 <!-- JSON View Resolver 추가 -->
-    <bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
-        <property name="contentType" value="application/json;charset=UTF-8"/>
-    </bean>
 
-    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
-        <property name="order" value="1"/>
-    </bean>
+	<!-- JSON View Resolver 추가 -->
+	<bean id="jsonView"
+		class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+		<property name="contentType"
+			value="application/json;charset=UTF-8" />
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<property name="order" value="1" />
+	</bean>
 
 	<!-- File Upload Resolver -->
 	<bean id="multipartResolver"

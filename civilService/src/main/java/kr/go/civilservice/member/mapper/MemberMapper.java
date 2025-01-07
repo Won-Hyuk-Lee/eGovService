@@ -1,6 +1,7 @@
 package kr.go.civilservice.member.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import kr.go.civilservice.member.model.MemberVO;
 
@@ -30,4 +31,8 @@ public interface MemberMapper {
 	int unlockAccount(String memberId);
 
 	List<MemberVO> getAllMembers();
+
+	List<MemberVO> selectMemberList(Map<String, Object> params);
+
+	int getTotalMemberCount();
 }
