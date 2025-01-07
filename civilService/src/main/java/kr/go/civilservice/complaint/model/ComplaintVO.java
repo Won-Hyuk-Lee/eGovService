@@ -24,6 +24,7 @@ public class ComplaintVO {
 	private Date modifiedDate;
 	private Date completedDate;
 	private String privateInfoYn;
+	private String publicYn;
 
 	// 추가 필드
 	private String memberName; // 작성자 이름

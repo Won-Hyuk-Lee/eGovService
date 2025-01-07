@@ -82,33 +82,49 @@ public class ComplaintController extends AbstractController {
 	}
 
 	private void handleDetail(HttpServletRequest request, ModelAndView mav) {
-        String uri = request.getRequestURI();
+	    try {
+	        String complaintIdStr = request.getRequestURI().substring(request.getRequestURI().lastIndexOf("/") + 1);
+	        if (complaintIdStr == null || complaintIdStr.trim().isEmpty() || !complaintIdStr.matches("\\d+")) {
+	            mav.setViewName("redirect:/complaint/list");
+	            return;
+	        }
 
-        try {
-            // "/complaint/view/123" 형태의 URI에서 마지막 숫자만 추출
-            String complaintIdStr = uri.substring(uri.lastIndexOf("/") + 1);
-            
-            // 빈 문자열이거나 숫자가 아닌 경우 목록으로 리다이렉트
-            if (complaintIdStr == null || complaintIdStr.trim().isEmpty() || !complaintIdStr.matches("\\d+")) {
-                mav.setViewName("redirect:/complaint/list");
-                return;
-            }
+	        Long complaintId = Long.parseLong(complaintIdStr);
+	        ComplaintVO complaint = complaintService.getComplaintById(complaintId);
+	        
+	        if (complaint == null) {
+	            mav.setViewName("redirect:/complaint/list");
+	            return;
+	        }
 
-            Long complaintId = Long.parseLong(complaintIdStr);
-            ComplaintVO complaint = complaintService.getComplaintById(complaintId);
-            
-            if (complaint != null) {
-                mav.addObject("complaint", complaint);
-                mav.setViewName("complaint/detail");
-            } else {
-                System.out.println("Complaint not found");
-                mav.setViewName("redirect:/complaint/list");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            mav.setViewName("redirect:/complaint/list");
-        }
-    }
+	        HttpSession session = request.getSession();
+	        MemberVO member = (MemberVO) session.getAttribute("member");
+
+	        // 비공개 글에 대한 접근 제어
+	        if ("N".equals(complaint.getPublicYn())) {
+	            if (member == null) {
+	                // 비로그인 사용자
+	                mav.setViewName("redirect:/member/login");
+	                return;
+	            } else if (!complaint.getMemberId().equals(member.getMemberId()) && 
+	                      !"ADMIN".equals(session.getAttribute("memberRole"))) {
+	                // 작성자나 관리자가 아닌 경우
+	                mav.setViewName("redirect:/access-denied");
+	                return;
+	            }
+	        } else if (member == null) {
+	            // 전체공개 글이지만 비로그인 사용자
+	            mav.addObject("loginRequired", true);
+	        }
+
+	        mav.addObject("complaint", complaint);
+	        mav.setViewName("complaint/detail");
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        mav.setViewName("redirect:/complaint/list");
+	    }
+	}
 
 	private void handleDelete(HttpServletRequest request, ModelAndView mav) {
 		String uri = request.getRequestURI();

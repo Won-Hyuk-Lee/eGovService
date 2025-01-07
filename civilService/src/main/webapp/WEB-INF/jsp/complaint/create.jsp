@@ -31,6 +31,16 @@
                     <input type="file" id="files" name="files" multiple>
                     <small>* 파일은 최대 5개까지 첨부 가능합니다.</small>
                 </div>
+
+                <div class="form-group">
+                    <label>공개 설정</label>
+                    <div class="radio-group">
+                        <input type="radio" id="public" name="publicYn" value="Y" checked>
+                        <label for="public">전체공개</label>
+                        <input type="radio" id="private" name="publicYn" value="N">
+                        <label for="private">비공개</label>
+                    </div>
+                </div>
                 
                 <div class="form-group">
                     <label for="privateInfoYn">
@@ -48,15 +58,5 @@
     </main>
     
     <jsp:include page="/WEB-INF/jsp/layout/footer.jsp" />
-    
-    <script>
-        // 파일 개수 제한
-        document.getElementById('files').addEventListener('change', function() {
-            if (this.files.length > 5) {
-                alert('파일은 최대 5개까지 첨부 가능합니다.');
-                this.value = '';
-            }
-        });
-    </script>
 </body>
 </html>
