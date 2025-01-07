@@ -65,8 +65,10 @@ public class ComplaintServiceImpl implements ComplaintService {
 
 	@Override
 	public void updateComplaint(ComplaintVO complaint, List<MultipartFile> files) {
+		// 민원 기본 정보 업데이트
 		complaintMapper.updateComplaint(complaint);
 
+		// 새로운 첨부파일이 있는 경우 처리
 		if (files != null && !files.isEmpty()) {
 			processUploadFiles(complaint.getComplaintId(), files);
 		}

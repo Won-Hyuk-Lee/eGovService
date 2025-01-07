@@ -86,29 +86,33 @@
     - 초기 상태는 'PENDING'(접수대기)으로 설정
     -->
     <insert id="insertComplaint" parameterType="kr.go.civilservice.complaint.model.ComplaintVO">
-        <selectKey keyProperty="complaintId" order="BEFORE" resultType="long">
-            SELECT SEQ_COMPLAINT_ID.NEXTVAL FROM DUAL
-        </selectKey>
-        INSERT INTO COMPLAINT (
-            COMPLAINT_ID, TITLE, CONTENT, MEMBER_ID,
-            STATUS, CREATED_DATE, PRIVATE_INFO_YN, PUBLIC_YN
-        ) VALUES (
-            #{complaintId}, #{title}, #{content}, #{memberId},
-            'PENDING', SYSDATE, #{privateInfoYn, jdbcType=VARCHAR}, #{publicYn}
-        )
-    </insert>
+    <selectKey keyProperty="complaintId" order="BEFORE" resultType="long">
+        SELECT SEQ_COMPLAINT_ID.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO COMPLAINT (
+        COMPLAINT_ID, TITLE, CONTENT, MEMBER_ID,
+        STATUS, CREATED_DATE, PRIVATE_INFO_YN, PUBLIC_YN
+    ) VALUES (
+        #{complaintId}, #{title}, #{content}, #{memberId},
+        'PENDING', SYSDATE, 
+        #{privateInfoYn, jdbcType=CHAR}, 
+        #{publicYn, jdbcType=CHAR}
+    )
+</insert>
 
     <!-- 
-    민원 수정: 제목, 내용 수정 및 수정일자 업데이트
+    민원 수정: 제목, 내용 수정 및 수정일자 + 공개여부 업데이트
     - 수정일자는 SYSDATE로 자동 설정
     -->
     <update id="updateComplaint" parameterType="kr.go.civilservice.complaint.model.ComplaintVO">
-        UPDATE COMPLAINT SET 
-            TITLE = #{title},
-            CONTENT = #{content},
-            MODIFIED_DATE = SYSDATE
-        WHERE COMPLAINT_ID = #{complaintId}
-    </update>
+    UPDATE COMPLAINT SET 
+        TITLE = #{title},
+        CONTENT = #{content},
+        PUBLIC_YN = #{publicYn, jdbcType=CHAR},
+        PRIVATE_INFO_YN = #{privateInfoYn, jdbcType=CHAR},
+        MODIFIED_DATE = SYSDATE
+    WHERE COMPLAINT_ID = #{complaintId}
+</update>
 
     <!-- 
     민원 삭제: complaintId로 민원 삭제
