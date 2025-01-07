@@ -2,6 +2,7 @@ package kr.go.civilservice.complaint.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,23 +11,24 @@ import kr.go.civilservice.complaint.model.ComplaintHistoryVO;
 import kr.go.civilservice.complaint.model.ComplaintVO;
 
 public interface ComplaintService {
-	List<ComplaintVO> getComplaintList(Map<String, Object> params);
+    List<ComplaintVO> getComplaintList(Map<String, Object> params);
 
-	ComplaintVO getComplaintById(Long complaintId);
+    ComplaintVO getComplaintById(Long complaintId);
 
-	void registerComplaint(ComplaintVO complaint, List<MultipartFile> files);
+    void registerComplaint(ComplaintVO complaint, List<MultipartFile> files);
 
-	void updateComplaint(ComplaintVO complaint, List<MultipartFile> files);
+    void updateComplaint(ComplaintVO complaint, List<MultipartFile> files);
 
-	void deleteComplaint(Long complaintId);
+    void deleteComplaint(Long complaintId);
 
-	ComplaintFileVO getComplaintFile(Long fileId);
+    ComplaintFileVO getComplaintFile(Long fileId);
 
-	void deleteComplaintFile(Long fileId);
+    void deleteComplaintFile(Long fileId);
 
-	void updateComplaintStatus(Long complaintId, String status, String handlerId, String comment);
+    void updateComplaintStatus(Long complaintId, String status, String handlerId, 
+        String comment, String requestFiles, Date requestDeadline, String resultContent);
 
-	Map<String, Object> getComplaintStats();
+    Map<String, Object> getComplaintStats();
 
-	List<ComplaintHistoryVO> getComplaintHistories(Long complaintId);
+    List<ComplaintHistoryVO> getComplaintHistories(Long complaintId);
 }

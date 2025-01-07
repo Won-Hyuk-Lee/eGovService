@@ -18,6 +18,7 @@
 				<prop key="/complaint/view/*">complaintController</prop>
 				<prop key="/complaint/delete/*">complaintController</prop>
 				<prop key="/complaint/edit/*">complaintController</prop>
+				<prop key="/complaint/status/*">complaintController</prop>
 				<prop key="/admin/dashboard">adminController</prop>
 				<prop key="/member/login">loginController</prop>
 				<prop key="/member/logout">logoutController</prop>
