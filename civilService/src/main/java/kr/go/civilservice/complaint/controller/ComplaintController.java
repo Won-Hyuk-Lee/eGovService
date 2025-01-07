@@ -41,7 +41,6 @@ public class ComplaintController extends AbstractController {
 			}
 		} else if (requestURI.contains("/view/")) {
 			handleDetail(request, mav);
-			return mav; // 여기에 return 추가
 		} else if (requestURI.contains("/delete/")) {
 			handleDelete(request, mav);
 		}
@@ -83,27 +82,33 @@ public class ComplaintController extends AbstractController {
 	}
 
 	private void handleDetail(HttpServletRequest request, ModelAndView mav) {
-		String uri = request.getRequestURI();
-		System.out.println("URI: " + uri); // 디버깅용 로그
+        String uri = request.getRequestURI();
 
-		try {
-			String[] segments = uri.split("/");
-			Long complaintId = Long.parseLong(segments[segments.length - 1]);
+        try {
+            // "/complaint/view/123" 형태의 URI에서 마지막 숫자만 추출
+            String complaintIdStr = uri.substring(uri.lastIndexOf("/") + 1);
+            
+            // 빈 문자열이거나 숫자가 아닌 경우 목록으로 리다이렉트
+            if (complaintIdStr == null || complaintIdStr.trim().isEmpty() || !complaintIdStr.matches("\\d+")) {
+                mav.setViewName("redirect:/complaint/list");
+                return;
+            }
 
-			ComplaintVO complaint = complaintService.getComplaintById(complaintId);
-			if (complaint != null) {
-				System.out.println("Complaint found: " + complaint.getTitle()); // 디버깅용 로그
-				mav.addObject("complaint", complaint);
-				mav.setViewName("complaint/detail");
-			} else {
-				System.out.println("Complaint not found"); // 디버깅용 로그
-				mav.setViewName("redirect:/complaint/list");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			mav.setViewName("redirect:/complaint/list");
-		}
-	}
+            Long complaintId = Long.parseLong(complaintIdStr);
+            ComplaintVO complaint = complaintService.getComplaintById(complaintId);
+            
+            if (complaint != null) {
+                mav.addObject("complaint", complaint);
+                mav.setViewName("complaint/detail");
+            } else {
+                System.out.println("Complaint not found");
+                mav.setViewName("redirect:/complaint/list");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            mav.setViewName("redirect:/complaint/list");
+        }
+    }
 
 	private void handleDelete(HttpServletRequest request, ModelAndView mav) {
 		String uri = request.getRequestURI();

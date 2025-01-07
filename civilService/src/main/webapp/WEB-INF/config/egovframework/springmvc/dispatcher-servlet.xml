@@ -15,7 +15,7 @@
 				<prop key="/">mainController</prop>
 				<prop key="/complaint/list">complaintController</prop>
 				<prop key="/complaint/create">complaintController</prop>
-				<prop key="/complaint/view/**">complaintController</prop>
+				<prop key="/complaint/view/*">complaintController</prop>
 				<prop key="/complaint/delete/*">complaintController</prop>
 				<prop key="/admin/dashboard">adminController</prop>
 				<prop key="/member/login">loginController</prop>
@@ -36,7 +36,6 @@
 		<property name="complaintService" ref="complaintService" />
 	</bean>
 
-	<!-- complaintController 추가 -->
 	<bean id="complaintController"
 		class="kr.go.civilservice.complaint.controller.ComplaintController">
 		<property name="complaintService" ref="complaintService" />
