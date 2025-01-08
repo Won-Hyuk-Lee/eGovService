@@ -21,164 +21,169 @@ import kr.go.civilservice.complaint.model.ComplaintVO;
 
 public class ComplaintServiceImpl implements ComplaintService {
 
-	private ComplaintMapper complaintMapper;
-	private String uploadPath;
+    private ComplaintMapper complaintMapper;
+    private String uploadPath;
 
-	public void setComplaintMapper(ComplaintMapper complaintMapper) {
-		this.complaintMapper = complaintMapper;
-	}
+    // Setter 메소드
+    public void setComplaintMapper(ComplaintMapper complaintMapper) {
+        this.complaintMapper = complaintMapper;
+    }
 
-	public void setUploadPath(String uploadPath) {
-		this.uploadPath = uploadPath;
-	}
+    public void setUploadPath(String uploadPath) {
+        this.uploadPath = uploadPath;
+    }
 
-	@PostConstruct
-	public void init() {
-		try {
-			Files.createDirectories(Paths.get(uploadPath));
-		} catch (IOException e) {
-			throw new RuntimeException("Could not create upload directory!", e);
-		}
-	}
+    // 초기화 메소드 - 업로드 디렉토리 생성
+    @PostConstruct
+    public void init() {
+        try {
+            Files.createDirectories(Paths.get(uploadPath));
+        } catch (IOException e) {
+            throw new RuntimeException("Could not create upload directory!", e);
+        }
+    }
 
-	@Override
-	public List<ComplaintVO> getComplaintList(Map<String, Object> params) {
-		return complaintMapper.selectComplaintList(params);
-	}
+    @Override
+    public List<ComplaintVO> getComplaintList(Map<String, Object> params) {
+        return complaintMapper.selectComplaintList(params);
+    }
 
-	@Override
-	public ComplaintVO getComplaintById(Long complaintId) {
-		ComplaintVO complaint = complaintMapper.selectComplaintById(complaintId);
-		if (complaint != null) {
-			complaint.setFiles(complaintMapper.selectComplaintFiles(complaintId));
-		}
-		return complaint;
-	}
+    @Override
+    public ComplaintVO getComplaintById(Long complaintId) {
+        ComplaintVO complaint = complaintMapper.selectComplaintById(complaintId);
+        if (complaint != null) {
+            complaint.setFiles(complaintMapper.selectComplaintFiles(complaintId));
+        }
+        return complaint;
+    }
 
-	@Override
-	public void registerComplaint(ComplaintVO complaint, List<MultipartFile> files) {
-		complaintMapper.insertComplaint(complaint);
+    @Override
+    public void registerComplaint(ComplaintVO complaint, List<MultipartFile> files) {
+        complaintMapper.insertComplaint(complaint);
 
-		if (files != null && !files.isEmpty()) {
-			processUploadFiles(complaint.getComplaintId(), files);
-		}
-	}
+        if (files != null && !files.isEmpty()) {
+            processUploadFiles(complaint.getComplaintId(), files);
+        }
+    }
 
-	@Override
-	public void updateComplaint(ComplaintVO complaint, List<MultipartFile> files) {
-		complaintMapper.updateComplaint(complaint);
+    @Override
+    public void updateComplaint(ComplaintVO complaint, List<MultipartFile> files) {
+        complaintMapper.updateComplaint(complaint);
 
-		if (files != null && !files.isEmpty()) {
-			processUploadFiles(complaint.getComplaintId(), files);
-		}
-	}
+        if (files != null && !files.isEmpty()) {
+            processUploadFiles(complaint.getComplaintId(), files);
+        }
+    }
 
-	@Override
-	public void deleteComplaint(Long complaintId) {
-		List<ComplaintFileVO> files = complaintMapper.selectComplaintFiles(complaintId);
-		for (ComplaintFileVO file : files) {
-			deleteComplaintFile(file.getFileId());
-		}
-		complaintMapper.deleteComplaint(complaintId);
-	}
+    @Override
+    public void deleteComplaint(Long complaintId) {
+        List<ComplaintFileVO> files = complaintMapper.selectComplaintFiles(complaintId);
+        for (ComplaintFileVO file : files) {
+            deleteComplaintFile(file.getFileId());
+        }
+        complaintMapper.deleteComplaint(complaintId);
+    }
 
-	@Override
-	public ComplaintFileVO getComplaintFile(Long fileId) {
-		return complaintMapper.selectComplaintFileById(fileId);
-	}
+    @Override
+    public ComplaintFileVO getComplaintFile(Long fileId) {
+        return complaintMapper.selectComplaintFileById(fileId);
+    }
 
-	@Override
-	public void deleteComplaintFile(Long fileId) {
-		ComplaintFileVO file = complaintMapper.selectComplaintFileById(fileId);
-		if (file != null) {
-			File physicalFile = new File(uploadPath + File.separator + file.getStoredFilename());
-			if (physicalFile.exists()) {
-				physicalFile.delete();
-			}
-			complaintMapper.deleteComplaintFile(fileId);
-		}
-	}
+    @Override
+    public void deleteComplaintFile(Long fileId) {
+        ComplaintFileVO file = complaintMapper.selectComplaintFileById(fileId);
+        if (file != null) {
+            File physicalFile = new File(uploadPath + File.separator + file.getStoredFilename());
+            if (physicalFile.exists()) {
+                physicalFile.delete();
+            }
+            complaintMapper.deleteComplaintFile(fileId);
+        }
+    }
 
-	private void processUploadFiles(Long complaintId, List<MultipartFile> files) {
-		for (MultipartFile file : files) {
-			if (!file.isEmpty()) {
-				try {
-					String originalFilename = file.getOriginalFilename();
-					String storedFilename = UUID.randomUUID().toString()
-							+ originalFilename.substring(originalFilename.lastIndexOf("."));
+    // 파일 업로드 처리 메소드
+    private void processUploadFiles(Long complaintId, List<MultipartFile> files) {
+        for (MultipartFile file : files) {
+            if (!file.isEmpty()) {
+                try {
+                    String originalFilename = file.getOriginalFilename();
+                    String storedFilename = UUID.randomUUID().toString()
+                            + originalFilename.substring(originalFilename.lastIndexOf("."));
 
-					File dest = new File(uploadPath + File.separator + storedFilename);
-					file.transferTo(dest);
+                    File dest = new File(uploadPath + File.separator + storedFilename);
+                    file.transferTo(dest);
 
-					ComplaintFileVO fileVO = new ComplaintFileVO();
-					fileVO.setComplaintId(complaintId);
-					fileVO.setOriginalFilename(originalFilename);
-					fileVO.setStoredFilename(storedFilename);
-					fileVO.setFileSize(file.getSize());
-					fileVO.setFileType(file.getContentType());
+                    ComplaintFileVO fileVO = new ComplaintFileVO();
+                    fileVO.setComplaintId(complaintId);
+                    fileVO.setOriginalFilename(originalFilename);
+                    fileVO.setStoredFilename(storedFilename);
+                    fileVO.setFileSize(file.getSize());
+                    fileVO.setFileType(file.getContentType());
 
-					complaintMapper.insertComplaintFile(fileVO);
+                    complaintMapper.insertComplaintFile(fileVO);
+                } catch (Exception e) {
+                    throw new RuntimeException("파일 업로드 실패", e);
+                }
+            }
+        }
+    }
 
-				} catch (Exception e) {
-					throw new RuntimeException("파일 업로드 실패", e);
-				}
-			}
-		}
-	}
+    @Override
+    public void updateComplaintStatus(Long complaintId, String status, String handlerId, 
+                                    String comment, String requestFiles, 
+                                    Date requestDeadline, String resultContent) {
+        ComplaintVO complaint = complaintMapper.selectComplaintById(complaintId);
+        if (complaint == null) {
+            throw new RuntimeException("존재하지 않는 민원입니다.");
+        }
 
-	@Override
-	public void updateComplaintStatus(Long complaintId, String status, String handlerId, String comment,
-			String requestFiles, Date requestDeadline, String resultContent) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("complaintId", complaintId);
+        params.put("status", status);
 
-		ComplaintVO complaint = complaintMapper.selectComplaintById(complaintId);
-		if (complaint == null) {
-			throw new RuntimeException("존재하지 않는 민원입니다.");
-		}
+        if ("COMPLETED".equals(status)) {
+            params.put("completedDate", new Date());
+        }
 
-		// 상태 업데이트
-		Map<String, Object> params = new HashMap<>();
-		params.put("complaintId", complaintId);
-		params.put("status", status);
+        complaintMapper.updateComplaintStatus(params);
 
-		// 처리완료인 경우 완료일자 설정
-		if ("COMPLETED".equals(status)) {
-			params.put("completedDate", new Date());
-		}
+        // 처리이력 등록
+        params.put("handlerId", handlerId);
+        params.put("processComment", comment);
+        params.put("requestFiles", requestFiles);
+        params.put("requestDeadline", requestDeadline);
+        params.put("resultContent", resultContent);
+        complaintMapper.insertComplaintHistory(params);
+    }
 
-		complaintMapper.updateComplaintStatus(params);
+    @Override
+    public Map<String, Object> getComplaintStats() {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("statusStats", complaintMapper.selectComplaintStatsByStatus());
+        stats.put("monthlyStats", complaintMapper.selectComplaintStatsByMonth());
+        return stats;
+    }
 
-		// 처리이력 등록
-		params.put("handlerId", handlerId);
-		params.put("processComment", comment);
-		params.put("requestFiles", requestFiles);
-		params.put("requestDeadline", requestDeadline);
-		params.put("resultContent", resultContent);
-		complaintMapper.insertComplaintHistory(params);
-	}
+    @Override
+    public List<ComplaintHistoryVO> getComplaintHistories(Long complaintId) {
+        return complaintMapper.selectComplaintHistories(complaintId);
+    }
 
-	@Override
-	public Map<String, Object> getComplaintStats() {
-		Map<String, Object> stats = new HashMap<>();
-		stats.put("statusStats", complaintMapper.selectComplaintStatsByStatus());
-		stats.put("monthlyStats", complaintMapper.selectComplaintStatsByMonth());
-		return stats;
-	}
+    @Override
+    public List<ComplaintVO> getComplaintList(int page, int pageSize) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("start", (page - 1) * pageSize);
+        params.put("size", pageSize);
+        return complaintMapper.selectComplaintListWithPaging(params);
+    }
 
-	@Override
-	public List<ComplaintHistoryVO> getComplaintHistories(Long complaintId) {
-		return complaintMapper.selectComplaintHistories(complaintId);
-	}
+    @Override
+    public int getTotalComplaintCount() {
+        return complaintMapper.getTotalComplaintCount(null);
+    }
 
-	@Override
-	public List<ComplaintVO> getComplaintList(int page, int pageSize) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("start", (page - 1) * pageSize);
-		params.put("size", pageSize);
-		return complaintMapper.selectComplaintListWithPaging(params);
-	}
-
-	@Override
-	public int getTotalComplaintCount() {
-		return complaintMapper.getTotalComplaintCount();
-	}
+    @Override
+    public int getTotalComplaintCount(String memberId) {
+        return complaintMapper.getTotalComplaintCount(memberId);
+    }
 }

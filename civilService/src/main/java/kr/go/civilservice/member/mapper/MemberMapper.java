@@ -35,4 +35,6 @@ public interface MemberMapper {
 	List<MemberVO> selectMemberList(Map<String, Object> params);
 
 	int getTotalMemberCount();
+
+	void deleteMember(String memberId);
 }

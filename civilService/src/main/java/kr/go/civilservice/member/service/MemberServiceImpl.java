@@ -3,6 +3,7 @@ package kr.go.civilservice.member.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -128,6 +129,25 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public MemberVO getMemberById(String memberId) {
 		return memberMapper.getMemberById(memberId);
+	}
+
+	@Override
+	public void deleteMember(String memberId) {
+		memberMapper.deleteMember(memberId);
+	}
+
+	@Override
+	public String resetPassword(String memberId) {
+		// 임시 비밀번호 생성 (8자리)
+		String temporaryPassword = UUID.randomUUID().toString().substring(0, 8);
+
+		// 비밀번호 암호화
+		String encodedPassword = passwordEncoder.encode(temporaryPassword);
+
+		// DB에 저장
+		memberMapper.updatePassword(memberId, encodedPassword);
+
+		return temporaryPassword;
 	}
 
 }

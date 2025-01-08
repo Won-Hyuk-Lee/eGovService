@@ -8,18 +8,23 @@
 		SELECT
 		MEMBER_ID as memberId,
 		PASSWORD as password,
-		NAME as name,
+		NAME as
+		name,
 		EMAIL as email,
 		PHONE as phone,
 		ADDRESS as address,
-		ENABLED as enabled,
+		ENABLED as
+		enabled,
 		LOGIN_FAIL_COUNT as loginFailCount,
-		LAST_LOGIN_DATE as lastLoginDate,
+		LAST_LOGIN_DATE as
+		lastLoginDate,
 		PASSWORD_CHANGE_DATE as passwordChangeDate,
-		CREATED_DATE as createdDate,
+		CREATED_DATE
+		as createdDate,
 		MODIFIED_DATE as modifiedDate
 		FROM MEMBER
-		WHERE MEMBER_ID = #{username}
+		WHERE MEMBER_ID
+		= #{username}
 	</select>
 
 	<!-- 회원 권한 조회 -->
@@ -121,7 +126,8 @@
 		ORDER BY MEMBER_ID
 	</select>
 
-<select id="selectMemberList" parameterType="map" resultType="memberVO">
+	<select id="selectMemberList" parameterType="map"
+		resultType="memberVO">
     <![CDATA[
     SELECT * FROM (
         SELECT a.*, ROWNUM rnum FROM (
@@ -137,11 +143,15 @@
         ROWNUM <= #{start} + #{size}
     ) WHERE rnum > #{start}
     ]]>
-</select>
+	</select>
 
 	<select id="getTotalMemberCount" resultType="int">
 		SELECT COUNT(*) FROM
 		MEMBER
 	</select>
+
+	<delete id="deleteMember" parameterType="string">
+		DELETE FROM MEMBER WHERE MEMBER_ID = #{memberId}
+	</delete>
 
 </mapper>

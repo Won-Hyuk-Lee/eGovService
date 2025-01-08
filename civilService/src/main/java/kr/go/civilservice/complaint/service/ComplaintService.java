@@ -11,28 +11,32 @@ import kr.go.civilservice.complaint.model.ComplaintHistoryVO;
 import kr.go.civilservice.complaint.model.ComplaintVO;
 
 public interface ComplaintService {
-	List<ComplaintVO> getComplaintList(Map<String, Object> params);
+    // 기본 CRUD 관련 메소드
+    List<ComplaintVO> getComplaintList(Map<String, Object> params);
+    ComplaintVO getComplaintById(Long complaintId);
+    void registerComplaint(ComplaintVO complaint, List<MultipartFile> files);
+    void updateComplaint(ComplaintVO complaint, List<MultipartFile> files);
+    void deleteComplaint(Long complaintId);
 
-	ComplaintVO getComplaintById(Long complaintId);
+    // 첨부파일 관련 메소드
+    ComplaintFileVO getComplaintFile(Long fileId);
+    void deleteComplaintFile(Long fileId);
 
-	void registerComplaint(ComplaintVO complaint, List<MultipartFile> files);
+    // 민원 처리 관련 메소드
+    void updateComplaintStatus(Long complaintId, String status, String handlerId, 
+                             String comment, String requestFiles,
+                             Date requestDeadline, String resultContent);
 
-	void updateComplaint(ComplaintVO complaint, List<MultipartFile> files);
+    // 통계 관련 메소드
+    Map<String, Object> getComplaintStats();
 
-	void deleteComplaint(Long complaintId);
+    // 처리이력 관련 메소드
+    List<ComplaintHistoryVO> getComplaintHistories(Long complaintId);
 
-	ComplaintFileVO getComplaintFile(Long fileId);
+    // 페이징 처리 관련 메소드
+    List<ComplaintVO> getComplaintList(int page, int pageSize);
+    int getTotalComplaintCount();
 
-	void deleteComplaintFile(Long fileId);
-
-	void updateComplaintStatus(Long complaintId, String status, String handlerId, String comment, String requestFiles,
-			Date requestDeadline, String resultContent);
-
-	Map<String, Object> getComplaintStats();
-
-	List<ComplaintHistoryVO> getComplaintHistories(Long complaintId);
-
-	List<ComplaintVO> getComplaintList(int page, int pageSize);
-
-	int getTotalComplaintCount();
+    // 회원별 민원 필터링 메소드
+    int getTotalComplaintCount(String memberId);
 }

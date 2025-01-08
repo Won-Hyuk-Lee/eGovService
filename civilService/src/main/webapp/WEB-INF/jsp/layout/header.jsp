@@ -13,7 +13,7 @@
                     <li><a href="<c:url value='/complaint/create'/>">민원신청</a></li>
                 </c:if>
                 <c:if test="${sessionScope.memberRole eq 'ADMIN'}">
-                    <li><a href="<c:url value='/admin/dashboard'/>">관리자</a></li>
+                    <li><a href="<c:url value='/admin'/>">관리자</a></li>
                 </c:if>
             </ul>
         </nav>

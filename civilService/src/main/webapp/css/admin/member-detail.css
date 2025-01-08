@@ -1,0 +1,99 @@
+/* /css/admin/member-detail.css */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.member-detail {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.status-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.status.active {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status.inactive {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.status-toggle-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #6c757d;
+    color: white;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.label {
+    width: 150px;
+    font-weight: bold;
+    color: #495057;
+}
+
+.value {
+    flex: 1;
+}
+
+.button-group {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.delete-btn, .reset-btn, .back-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.reset-btn {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.back-btn {
+    background-color: #6c757d;
+    color: white;
+    display: inline-block;
+}
+
+.button-group button:hover, .back-btn:hover {
+    opacity: 0.9;
+}

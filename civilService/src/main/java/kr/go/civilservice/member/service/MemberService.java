@@ -32,4 +32,8 @@ public interface MemberService {
 	int getTotalMemberCount();
 
 	MemberVO getMemberById(String memberId);
+
+	void deleteMember(String memberId);
+
+	String resetPassword(String memberId);
 }

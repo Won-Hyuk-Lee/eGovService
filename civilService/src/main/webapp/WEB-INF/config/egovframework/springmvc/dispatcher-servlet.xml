@@ -27,6 +27,9 @@
 				<prop key="/member/logout">logoutController</prop>
 				<prop key="/member/signup">memberController</prop>
 				<prop key="/member/check-id">memberController</prop>
+				<prop key="/admin/member/status">adminController</prop>
+				<prop key="/admin/member/reset-password">adminController</prop>
+				<prop key="/admin/member/delete">adminController</prop>
 				<prop key="/access-denied">accessDeniedController</prop>
 			</props>
 		</property>
